@@ -8,6 +8,7 @@ export class TomeStack extends cdk.Stack {
 
     // Auth:
     // Cognito User Pool
+    // note this is from the construct library and not a CFN Construct
     const userPool = new cognito.UserPool(this, 'TomeUserPool', {
       signInAliases: {
         email: true,
