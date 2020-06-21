@@ -40,7 +40,17 @@ export class TomeStack extends cdk.Stack {
       }
     });
 
-
+    const userPoolClient = new cognito.UserPoolClient(this, 'TomeTestUserPoolClient', {
+      userPoolClientName: 'testClient',
+      userPool: {
+        userPoolId: `${userPool.userPoolId}`,
+      },
+      authFlows: {
+        adminUserPassword: true,
+        refreshToken: true,
+      },
+      preventUserExistenceErrors: true
+    })
     // Lambda
     // DynamoDB Table
     
