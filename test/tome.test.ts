@@ -13,7 +13,8 @@ describe('Cognito User Pool', () => {
 
   it('should return a new authed user', async () => {
     // TODO: pull in these values dynamically
-    // I like this generate config idea :) ... se below
+    // I like this generate config idea :) ... see below:
+    // THIS APPROACH should replace the need to have aws-cred 
     // https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/cdk.ts#L384
     // https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/generateConfig.ts#L17
     const userPoolId = 'how to get this ?';
