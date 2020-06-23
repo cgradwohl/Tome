@@ -1,6 +1,9 @@
 import * as cdk from '@aws-cdk/core';
-import * as cognito from '@aws-cdk/aws-cognito';
+import { UserPool, UserPoolClient } from '@aws-cdk/aws-cognito';
 export class TomeStack extends cdk.Stack {
+  userPool: UserPool;
+  userPoolClient: UserPoolClient;
+
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -9,7 +12,7 @@ export class TomeStack extends cdk.Stack {
     // Auth:
     // Cognito User Pool
     // note this is from the construct library and not a CFN Construct
-    const userPool = new cognito.UserPool(this, 'TomeUserPool', {
+    this.userPool = new UserPool(this, 'TomeUserPool', {
       signInAliases: {
         email: true,
       },
@@ -40,17 +43,16 @@ export class TomeStack extends cdk.Stack {
       }
     });
 
-    const userPoolClient = new cognito.UserPoolClient(this, 'TomeTestUserPoolClient', {
+    this.userPoolClient = new UserPoolClient(this, 'TomeTestUserPoolClient', {
       userPoolClientName: 'testClient',
-      userPool: {
-        userPoolId: `${userPool.userPoolId}`,
-      },
+      userPool: this.userPool,
       authFlows: {
         adminUserPassword: true,
         refreshToken: true,
       },
       preventUserExistenceErrors: true
-    })
+    });
+    
     // Lambda
     // DynamoDB Table
     
