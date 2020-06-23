@@ -4,12 +4,14 @@ const chance  = require('chance').Chance()
 // needs number, special char, upper and lower case
 const random_password = () => `${chance.string({ length: 8})}B!gM0uth`
 
-const an_authenticated_user = async () => {
+const an_authenticated_user = async (cognito_user_pool_id, cognito_server_client_id) => {
   const cognito = new AWS.CognitoIdentityServiceProvider()
   // we already had this variable defined in serverless.yml for the get-index handler.
-  const userpoolId = process.env.cognito_user_pool_id
+  // const userpoolId = process.env.cognito_user_pool_id
+  const userpoolId = cognito_user_pool_id
   // we need this value from the environement but we don't need it in ANY of our functions!
-  const clientId = process.env.cognito_server_client_id
+  // const clientId = process.env.cognito_server_client_id
+  const clientId = cognito_server_client_id
 
   const firstName = chance.first({ nationality: "en" })
   const lastName  = chance.last({ nationality: "en" })
@@ -20,7 +22,7 @@ const an_authenticated_user = async () => {
 
   const createReq = {
     UserPoolId        : userpoolId,
-    Username          : username,
+    Username          : email,
     MessageAction     : 'SUPPRESS',
     TemporaryPassword : password,
     UserAttributes    : [
@@ -40,7 +42,7 @@ const an_authenticated_user = async () => {
     UserPoolId      : userpoolId,
     ClientId        : clientId,
     AuthParameters  : {
-      USERNAME: username,
+      USERNAME: email,
       PASSWORD: password
     }
   }
@@ -54,7 +56,7 @@ const an_authenticated_user = async () => {
     ChallengeName       : resp.ChallengeName,
     Session             : resp.Session,
     ChallengeResponses  : {
-      USERNAME: username,
+      USERNAME: email,
       NEW_PASSWORD: random_password()
     }
   }
