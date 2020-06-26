@@ -2,7 +2,11 @@ const init = require('../test/utils/init.js');
 const given = require('../test/utils/given.js');
 const tearDown = require('../test/utils/tearDown.js');
 
-console.log = jest.fn()
+import 'source-map-support/register';
+import * as cdk from '@aws-cdk/core';
+import { TomeStack } from '../lib/tome-stack';
+
+// console.log = jest.fn()
 
 describe('Cognito User Pool', () => {
   let user: { username: any; firstName: any; lastName: any; };
@@ -17,8 +21,14 @@ describe('Cognito User Pool', () => {
     // THIS APPROACH should replace the need to have aws-cred 
     // https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/cdk.ts#L384
     // https://github.com/aws-samples/amazon-cognito-example-for-external-idp/blob/master/cdk/src/generateConfig.ts#L17
-    const userPoolId = 'how to get this ?';
-    const userPoolClientId = 'how to get this ?';
+    const app = new cdk.App();
+    const tome = new TomeStack(app, 'TomeStack');
+
+    
+    const userPoolId = tome.userPool.userPoolId;
+    const userPoolClientId = tome.userPoolClient.userPoolClientId;
+
+    console.log('POOL', tome.userPool.userPoolId);
       
     user = await given.an_authenticated_user(userPoolId, userPoolClientId);
   
