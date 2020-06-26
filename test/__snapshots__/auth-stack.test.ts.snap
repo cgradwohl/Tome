@@ -1,0 +1,447 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`auth-stack should work 1`] = `
+Object {
+  "Outputs": Object {
+    "helloWorldLambdaRestApiEndpointC5601FAC": Object {
+      "Value": Object {
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "helloWorldLambdaRestApi6825FB98",
+            },
+            ".execute-api.",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            Object {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            Object {
+              "Ref": "helloWorldLambdaRestApiDeploymentStageprod67DD79AF",
+            },
+            "/",
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": Object {
+    "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8ArtifactHash3A1D95D0": Object {
+      "Description": "Artifact hash for asset \\"1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8\\"",
+      "Type": "String",
+    },
+    "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8S3Bucket5C95B393": Object {
+      "Description": "S3 bucket for asset \\"1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8\\"",
+      "Type": "String",
+    },
+    "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8S3VersionKey84FB9C63": Object {
+      "Description": "S3 key for asset version \\"1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8\\"",
+      "Type": "String",
+    },
+  },
+  "Resources": Object {
+    "cfnAuth": Object {
+      "Properties": Object {
+        "IdentitySource": "method.request.header.Authorization",
+        "Name": "HelloWorldAPIAuthorizer",
+        "ProviderARNs": Array [
+          Object {
+            "Fn::GetAtt": Array [
+              "userPoolDC9497E0",
+              "Arn",
+            ],
+          },
+        ],
+        "RestApiId": Object {
+          "Ref": "helloWorldLambdaRestApi6825FB98",
+        },
+        "Type": "COGNITO_USER_POOLS",
+      },
+      "Type": "AWS::ApiGateway::Authorizer",
+    },
+    "helloWorldFunction00C940B5": Object {
+      "DependsOn": Array [
+        "helloWorldFunctionServiceRole8475DBF0",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8S3Bucket5C95B393",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8S3VersionKey84FB9C63",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters1b13b8775392bc0532db830d8447779bacfe88e0b36f20766ebf1e2085091db8S3VersionKey84FB9C63",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "helloworld.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldFunctionServiceRole8475DBF0",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs12.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "helloWorldFunctionServiceRole8475DBF0": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "helloWorldLambdaRestApi6825FB98": Object {
+      "Properties": Object {
+        "Name": "Hello World API",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "helloWorldLambdaRestApiAccount3D66EADA": Object {
+      "DependsOn": Array [
+        "helloWorldLambdaRestApi6825FB98",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldLambdaRestApiCloudWatchRole22367FBD",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "helloWorldLambdaRestApiCloudWatchRole22367FBD": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "helloWorldLambdaRestApiDeploymentCB1FF574ae10c162afd462d14276188f96f29d56": Object {
+      "DependsOn": Array [
+        "helloWorldLambdaRestApiHELLOGET6E88F46C",
+        "helloWorldLambdaRestApiHELLOAD091B67",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "helloWorldLambdaRestApi6825FB98",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "helloWorldLambdaRestApiDeploymentStageprod67DD79AF": Object {
+      "Properties": Object {
+        "DeploymentId": Object {
+          "Ref": "helloWorldLambdaRestApiDeploymentCB1FF574ae10c162afd462d14276188f96f29d56",
+        },
+        "RestApiId": Object {
+          "Ref": "helloWorldLambdaRestApi6825FB98",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "helloWorldLambdaRestApiHELLOAD091B67": Object {
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldLambdaRestApi6825FB98",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "HELLO",
+        "RestApiId": Object {
+          "Ref": "helloWorldLambdaRestApi6825FB98",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "helloWorldLambdaRestApiHELLOGET6E88F46C": Object {
+      "Properties": Object {
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": Object {
+          "Ref": "cfnAuth",
+        },
+        "HttpMethod": "GET",
+        "Integration": Object {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "helloWorldFunction00C940B5",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": Object {
+          "Ref": "helloWorldLambdaRestApiHELLOAD091B67",
+        },
+        "RestApiId": Object {
+          "Ref": "helloWorldLambdaRestApi6825FB98",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "helloWorldLambdaRestApiHELLOGETApiPermissionTestAuthStackhelloWorldLambdaRestApiDD8D8853GETHELLOEDFC2CE9": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldFunction00C940B5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "helloWorldLambdaRestApi6825FB98",
+              },
+              "/",
+              Object {
+                "Ref": "helloWorldLambdaRestApiDeploymentStageprod67DD79AF",
+              },
+              "/GET/HELLO",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "helloWorldLambdaRestApiHELLOGETApiPermissionTestTestAuthStackhelloWorldLambdaRestApiDD8D8853GETHELLO6A5EDC0F": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldFunction00C940B5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "helloWorldLambdaRestApi6825FB98",
+              },
+              "/test-invoke-stage/GET/HELLO",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "userPoolDC9497E0": Object {
+      "Properties": Object {
+        "AccountRecoverySetting": Object {
+          "RecoveryMechanisms": Array [
+            Object {
+              "Name": "verified_phone_number",
+              "Priority": 1,
+            },
+            Object {
+              "Name": "verified_email",
+              "Priority": 2,
+            },
+          ],
+        },
+        "AdminCreateUserConfig": Object {
+          "AllowAdminCreateUserOnly": true,
+        },
+        "AutoVerifiedAttributes": Array [
+          "email",
+        ],
+        "EmailVerificationMessage": "The verification code to your new account is {####}",
+        "EmailVerificationSubject": "Verify your new account",
+        "SmsConfiguration": Object {
+          "ExternalId": "TestAuthStackuserPool1870016B",
+          "SnsCallerArn": Object {
+            "Fn::GetAtt": Array [
+              "userPoolsmsRoleED3E1FD9",
+              "Arn",
+            ],
+          },
+        },
+        "SmsVerificationMessage": "The verification code to your new account is {####}",
+        "UsernameAttributes": Array [
+          "email",
+        ],
+        "VerificationMessageTemplate": Object {
+          "DefaultEmailOption": "CONFIRM_WITH_CODE",
+          "EmailMessage": "The verification code to your new account is {####}",
+          "EmailSubject": "Verify your new account",
+          "SmsMessage": "The verification code to your new account is {####}",
+        },
+      },
+      "Type": "AWS::Cognito::UserPool",
+    },
+    "userPoolsmsRoleED3E1FD9": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Condition": Object {
+                "StringEquals": Object {
+                  "sts:ExternalId": "TestAuthStackuserPool1870016B",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "cognito-idp.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Policies": Array [
+          Object {
+            "PolicyDocument": Object {
+              "Statement": Array [
+                Object {
+                  "Action": "sns:Publish",
+                  "Effect": "Allow",
+                  "Resource": "*",
+                },
+              ],
+              "Version": "2012-10-17",
+            },
+            "PolicyName": "sns-publish",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+  },
+}
+`;
