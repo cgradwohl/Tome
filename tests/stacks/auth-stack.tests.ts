@@ -4,18 +4,10 @@ import { App, Fn } from '@aws-cdk/core';
 
 import { AuthStack } from '../../lib/auth-stack';
 
-import { init } from '../utils/init';
-
 const app = new App();
 const authStack = new AuthStack(app, 'TestAuthStack');
 
-
-
 describe('auth-stack', () => {
-  beforeAll(async () => {
-    await init();
-  })
-  
   it('should work', () => {
     expect(SynthUtils.toCloudFormation(authStack)).toMatchSnapshot();
   });
@@ -42,4 +34,6 @@ describe('auth-stack', () => {
       },
     });
   })
+
+  it('it should deploy a user pool client', () => { expect('todo').toEqual('todo') })
 });
