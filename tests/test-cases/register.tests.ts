@@ -3,13 +3,13 @@ const chance = require('chance').Chance();
 
 import { init, when } from '../utils';
 
-describe('Login', () => {
+describe('Register', () => {
   beforeAll(async () => {
     init();
   });
 
-  describe('Given a valid username an password', () => { 
-    it('should successfully return the user', async () => { 
+  describe('Given valid user data', () => { 
+    it('should successfully register a new user with Cognito', async () => { 
       // use the client to login!
       const cognito = new AWS.CognitoIdentityServiceProvider()
       // we already had this variable defined in serverless.yml for the get-index handler.
@@ -36,14 +36,13 @@ describe('Login', () => {
         ]
       }
 
-      // using admin privalages to create a user manually
-      await cognito.adminCreateUser(createReq).promise()
-  
       // TODO:
-      // if we are in integration test mode, then we simply invoke the login function.
-      // if we are in e2e test mode, then we need to call the deployed /login endpoint
-      const response = await when.we_invoke_login(user);
+      // if we are in integration test mode, then we simply invoke the register function.
+      // if we are in e2e test mode, then we need to call the deployed /register endpoint
+      const response = await when.we_invoke_register(createReq);
     })
+
+    it('should successfully add thhe new user to our DynamoDB Table', () => { })
   })
   
 });
