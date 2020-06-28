@@ -15,6 +15,8 @@ const init = async () => {
   // 3. awscred reads those variables from the environment process and resolves them for us.
   const { credentials, region } = await promisify(awscred.load)()
 
+  console.log('creds', credentials);
+
   console.log('REGION', region);
   
   process.env.AWS_ACCESS_KEY_ID     = credentials.accessKeyId
@@ -31,5 +33,5 @@ const init = async () => {
   initialized = true
 }
 
-module.exports = init;
+module.exports = { init };
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { TomeStack } from '../lib/tome-stack';
+import { AuthStack } from '../lib/auth-stack';
 
 const app = new cdk.App();
-new TomeStack(app, 'TomeStack');
+new AuthStack(app, 'AuthStack');

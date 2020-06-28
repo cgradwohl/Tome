@@ -1,5 +1,7 @@
 export const handler = async (event: any = {}) : Promise <any> => {
-  console.log(event);
+  console.log("DUDE: \n");
+  console.log(process.env.USER_POOL_ID);
 
-  return { statusCode: 201, body: 'hello creature ...' };
+
+  return { statusCode: 201, body: 'hello creaturee ...' + process.env.USER_POOL_ID };
 };

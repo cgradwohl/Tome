@@ -1,17 +1,28 @@
 import { LambdaRestApi, CfnAuthorizer, LambdaIntegration, AuthorizationType } from '@aws-cdk/aws-apigateway';
 import { AssetCode, Function, Runtime } from '@aws-cdk/aws-lambda';
-import { App, Stack } from '@aws-cdk/core';
+import { App, Stack, CfnOutput } from '@aws-cdk/core';
 import { UserPool } from '@aws-cdk/aws-cognito'
 
 export class AuthStack extends Stack {
   constructor(app: App, id: string) {
     super(app, id);
 
+    // Cognito User Pool with Email Sign-in Type.
+    const userPool = new UserPool(this, 'userPool', {
+      signInAliases: {
+        email: true
+      }
+    })
+
     // Function that returns 201 with "Hello world!"
     const helloWorldFunction = new Function(this, 'helloWorldFunction', {
       code: new AssetCode('lambdas'),
       handler: 'helloworld.handler',
-      runtime: Runtime.NODEJS_12_X
+      runtime: Runtime.NODEJS_12_X,
+      // this is the only way I have been able to get the pool id
+      environment: {
+        USER_POOL_ID: userPool.userPoolId,
+      }
     });
 
     // Rest API backed by the helloWorldFunction
@@ -20,13 +31,6 @@ export class AuthStack extends Stack {
       handler: helloWorldFunction,
       proxy: false,
     });
-
-    // Cognito User Pool with Email Sign-in Type.
-    const userPool = new UserPool(this, 'userPool', {
-      signInAliases: {
-        email: true
-      }
-    })
 
     // Authorizer for the Hello World API that uses the
     // Cognito User pool to Authorize users.
@@ -50,6 +54,11 @@ export class AuthStack extends Stack {
       }
       
     })
+
+    new CfnOutput(this, "UserPoolIdOutput", {
+      description: "UserPool ID",
+      value: userPool.userPoolId
+    });
     
   }
 }
