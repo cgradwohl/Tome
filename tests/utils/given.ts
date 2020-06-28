@@ -4,7 +4,7 @@ const chance  = require('chance').Chance()
 // needs number, special char, upper and lower case
 const random_password = () => `${chance.string({ length: 8})}B!gM0uth`
 
-const an_authenticated_user = async (cognito_user_pool_id, cognito_server_client_id) => {
+export const an_authenticated_user = async (cognito_user_pool_id: string, cognito_server_client_id: string) => {
   const cognito = new AWS.CognitoIdentityServiceProvider()
   // we already had this variable defined in serverless.yml for the get-index handler.
   // const userpoolId = process.env.cognito_user_pool_id
@@ -70,8 +70,4 @@ const an_authenticated_user = async (cognito_user_pool_id, cognito_server_client
     lastName,
     idToken: challengeResp.AuthenticationResult.IdToken
   }
-}
-
-module.exports = {
-  an_authenticated_user
 }

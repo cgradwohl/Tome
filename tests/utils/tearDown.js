@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const AWS = require('aws-sdk');
+exports.an_authenticated_user = async (user) => {
+    const cognito = new AWS.CognitoIdentityServiceProvider();
+    let req = {
+        UserPoolId: process.env.cognito_user_pool_id,
+        Username: user.username
+    };
+    await cognito.adminDeleteUser(req).promise();
+    console.log(`[${user.username}] - user deleted`);
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGVhckRvd24uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJ0ZWFyRG93bi50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLE1BQU0sR0FBRyxHQUFHLE9BQU8sQ0FBQyxTQUFTLENBQUMsQ0FBQTtBQUVqQixRQUFBLHFCQUFxQixHQUFHLEtBQUssRUFBRSxJQUFTLEVBQUUsRUFBRTtJQUN2RCxNQUFNLE9BQU8sR0FBRyxJQUFJLEdBQUcsQ0FBQyw4QkFBOEIsRUFBRSxDQUFBO0lBRXhELElBQUksR0FBRyxHQUFHO1FBQ1IsVUFBVSxFQUFFLE9BQU8sQ0FBQyxHQUFHLENBQUMsb0JBQW9CO1FBQzVDLFFBQVEsRUFBRSxJQUFJLENBQUMsUUFBUTtLQUN4QixDQUFBO0lBQ0QsTUFBTSxPQUFPLENBQUMsZUFBZSxDQUFDLEdBQUcsQ0FBQyxDQUFDLE9BQU8sRUFBRSxDQUFBO0lBRTVDLE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxJQUFJLENBQUMsUUFBUSxrQkFBa0IsQ0FBQyxDQUFBO0FBQ2xELENBQUMsQ0FBQSIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IEFXUyA9IHJlcXVpcmUoJ2F3cy1zZGsnKVxuXG5leHBvcnQgY29uc3QgYW5fYXV0aGVudGljYXRlZF91c2VyID0gYXN5bmMgKHVzZXI6IGFueSkgPT4ge1xuICBjb25zdCBjb2duaXRvID0gbmV3IEFXUy5Db2duaXRvSWRlbnRpdHlTZXJ2aWNlUHJvdmlkZXIoKVxuICBcbiAgbGV0IHJlcSA9IHtcbiAgICBVc2VyUG9vbElkOiBwcm9jZXNzLmVudi5jb2duaXRvX3VzZXJfcG9vbF9pZCxcbiAgICBVc2VybmFtZTogdXNlci51c2VybmFtZVxuICB9XG4gIGF3YWl0IGNvZ25pdG8uYWRtaW5EZWxldGVVc2VyKHJlcSkucHJvbWlzZSgpXG4gIFxuICBjb25zb2xlLmxvZyhgWyR7dXNlci51c2VybmFtZX1dIC0gdXNlciBkZWxldGVkYClcbn1cbiJdfQ==

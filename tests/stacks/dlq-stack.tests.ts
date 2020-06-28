@@ -1,7 +1,7 @@
 import { Stack } from '@aws-cdk/core';
 import '@aws-cdk/assert/jest';
 
-import * as dlq from '../lib/dlq-stack';
+import * as dlq from '../../lib/dlq-stack';
 
 test('dlq creates an alarm', () => {
   const stack = new Stack();

@@ -4,7 +4,7 @@ const awscred = require('awscred') //resolves the AWS credentials using the awsc
 
 let initialized = false
 
-const init = async () => {
+export const init = async () => {
   if (initialized) {
     return
   }
@@ -32,6 +32,3 @@ const init = async () => {
 
   initialized = true
 }
-
-module.exports = { init };
-

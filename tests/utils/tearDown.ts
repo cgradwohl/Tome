@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk')
 
-const an_authenticated_user = async (user) => {
+export const an_authenticated_user = async (user: any) => {
   const cognito = new AWS.CognitoIdentityServiceProvider()
   
   let req = {
@@ -10,8 +10,4 @@ const an_authenticated_user = async (user) => {
   await cognito.adminDeleteUser(req).promise()
   
   console.log(`[${user.username}] - user deleted`)
-}
-
-module.exports = {
-  an_authenticated_user
 }

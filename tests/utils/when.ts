@@ -24,7 +24,7 @@ const { promisify } = require('util')
  */
 const mode = process.env.TEST_MODE
 
-const viaHandler = async (event, functionName) => {
+const viaHandler = async (event: any, functionName: any) => {
   // sinnce we are using the middy middleware lib on our functions (which helps us access ssm), we need to promisify the callback that the middy wrapped handlers onw return.
   const handler = promisify(require(`${APP_ROOT}/functions/${functionName}`).handler)
 
@@ -43,7 +43,7 @@ const viaHandler = async (event, functionName) => {
  * 
  * Since axios has a different response structure to our Lambda function, we need the respondFrom method massage the axios response to what we need 
  */
-const respondFrom = async (httpRes) => {
+const respondFrom = async (httpRes: any) => {
   return {
     statusCode: httpRes.status,
     body: httpRes.data,
@@ -70,9 +70,9 @@ const respondFrom = async (httpRes) => {
  * 
  * More Infor here: https://docs.aws.amazon.com/apigateway/api-reference/signing-requests/
  */
-const signHttpRequest = (url) => {
+const signHttpRequest = (url: any) => {
   const urlData = URL.parse(url)
-  const opts = {
+  const opts: any = {
     host: urlData.hostname,
     path: urlData.pathname
   }
@@ -92,13 +92,13 @@ const signHttpRequest = (url) => {
  *    iam_auth: we should sign the HTTP request using our IAM credentials (which is what the signHttpRequest method is for)
  *    auth: include this as the Authorization header, used for authenticating against Cognito-protected endpoints (i.e. search-restaurants)
  */
-const viaHttp = async (relPath, method, opts) => {
+const viaHttp = async (relPath: any, method: any, opts: any) => {
   const url = `${process.env.rootUrl}/${relPath}`
   console.info(`invoking via HTTP ${method} ${url}`)
 
   try {
     const data = _.get(opts, "body")
-    let headers = {}
+    let headers: any = {};
     if (_.get(opts, "iam_auth", false) === true) {
       headers = signHttpRequest(url)
     }
@@ -132,7 +132,7 @@ const we_invoke_get_index = async () => {
     case 'handler':
       return await viaHandler({}, 'get-index')
     case 'http':
-      return await viaHttp('', 'GET')
+      return await viaHttp('', 'GET', null)
     default:
       throw new Error(`unsupported mode: ${mode}`)
   }
@@ -147,7 +147,7 @@ const we_invoke_get_restaurants = async () => {
       throw new Error(`unsupported mode: ${mode}`)
   }
 }
-const we_invoke_search_restaurants = async (theme, user) => {
+const we_invoke_search_restaurants = async (theme: any, user: any) => {
   const body = JSON.stringify({ theme })
 
   switch (mode) {
@@ -161,7 +161,7 @@ const we_invoke_search_restaurants = async (theme, user) => {
   }
 }
 
-const we_invoke_place_order = async (user, restaurantName) => {
+const we_invoke_place_order = async (user: any, restaurantName:any) => {
   const body = JSON.stringify({ restaurantName })
 
   switch (mode) {
@@ -175,7 +175,7 @@ const we_invoke_place_order = async (user, restaurantName) => {
   }
 }
 
-const we_invoke_notify_restaurant = async (event) => {
+const we_invoke_notify_restaurant = async (event: any) => {
   if (mode === 'handler') {
     await viaHandler(event, 'notify-restaurant')
   } else {
@@ -183,7 +183,7 @@ const we_invoke_notify_restaurant = async (event) => {
   }
 }
 
-module.exports = {
+export const when = {
   we_invoke_get_index,
   we_invoke_get_restaurants,
   we_invoke_search_restaurants,

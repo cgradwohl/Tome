@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
+import '../tests/node_modules/source-map-support/register';
 import * as cdk from '@aws-cdk/core';
 import { AuthStack } from '../lib/auth-stack';
 

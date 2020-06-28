@@ -4,7 +4,7 @@ const tearDown = require('../test/utils/tearDown.js');
 
 import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
-import { TomeStack } from '../lib/tome-stack';
+import { TomeStack } from '../../lib/tome-stack';
 
 // console.log = jest.fn()
 
