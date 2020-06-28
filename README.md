@@ -18,3 +18,6 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 1. make cognito user pool and user pool client ids, ssm values for testing.
 2. finish login flow testing
 3. clean up testing utils and npm test scripts
+4. data model documentation
+5. domain model documentation
+6. rest apis documentation
