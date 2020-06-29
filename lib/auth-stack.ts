@@ -29,37 +29,20 @@ export class AuthStack extends Stack {
       code: new AssetCode('lambdas'),
       handler: 'helloworld.handler',
       runtime: Runtime.NODEJS_12_X,
-      // this is the only way I have been able to get the pool id
-      environment: {
-        USER_POOL_ID: userPool.userPoolId,
-      }
     });
 
-    const loginFunction = new Function(this, 'login', {
-      code: new AssetCode('lambdas'),
-      handler: 'login.handler',
-      runtime: Runtime.NODEJS_12_X,
-      environment: {
-        USER_POOL_ID: userPool.userPoolId,
-        USER_POOL_CLIENT_ID: userPoolClient.userPoolClientId, 
-      }
-    })
 
     // Rest API backed by the helloWorldFunction
+    // Defines an API Gateway REST API with AWS Lambda proxy integration
     const helloWorldLambdaRestApi = new LambdaRestApi(this, 'helloWorldLambdaRestApi', {
       restApiName: 'Hello World API',
       handler: helloWorldFunction,
       proxy: false,
     });
 
-    const loginLambdaRestApi = new LambdaRestApi(this, 'loginLambdaRestApi', {
-      restApiName: 'Login API',
-      handler: loginFunction,
-      proxy: false,
-    })
-
     // Authorizer for the Hello World API that uses the
     // Cognito User pool to Authorize users.
+    // AWS::ApiGateway::Authorizer
     const authorizer = new CfnAuthorizer(this, 'cfnAuth', {
       restApiId: helloWorldLambdaRestApi.restApiId,
       name: 'HelloWorldAPIAuthorizer',
@@ -71,8 +54,6 @@ export class AuthStack extends Stack {
     // Hello Resource API for the REST API. 
     const hello = helloWorldLambdaRestApi.root.addResource('HELLO');
 
-    const login = loginLambdaRestApi.root.addResource('login');
-
     // GET method for the HELLO API resource. It uses Cognito for
     // authorization and the auathorizer defined above.
     hello.addMethod('GET', new LambdaIntegration(helloWorldFunction), {
@@ -80,10 +61,7 @@ export class AuthStack extends Stack {
       authorizer: {
         authorizerId: authorizer.ref
       }
-      
     })
-
-    login.addMethod('POST', new LambdaIntegration(loginFunction))
 
     new CfnOutput(this, "UserPoolIdOutput", {
       description: "UserPool ID",

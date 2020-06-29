@@ -8,11 +8,11 @@ const app = new App();
 const authStack = new AuthStack(app, 'TestAuthStack');
 
 describe('auth-stack', () => {
-  it('should work', () => {
+  it('should generate expected cloud formation template', () => {
     expect(SynthUtils.toCloudFormation(authStack)).toMatchSnapshot();
   });
 
-  it('should deploy user pool', () => { 
+  it('should deploy a user pool', () => { 
     expect(authStack).toHaveResource('AWS::Cognito::UserPool', {
       AutoVerifiedAttributes: [
         "email"
@@ -35,5 +35,5 @@ describe('auth-stack', () => {
     });
   })
 
-  it('it should deploy a user pool client', () => { expect('todo').toEqual('todo') })
+  it('should deploy a user pool client', () => { expect('todo').toEqual('todo') })
 });
