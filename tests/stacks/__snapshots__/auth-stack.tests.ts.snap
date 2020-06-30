@@ -1,22 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`auth-stack should work 1`] = `
+exports[`auth-stack should generate expected cloud formation template 1`] = `
 Object {
   "Outputs": Object {
-    "UserPoolIdOutput": Object {
-      "Description": "UserPool ID",
-      "Value": Object {
-        "Ref": "TomeUserPool39BBD8AA",
-      },
-    },
-    "helloWorldLambdaRestApiEndpointC5601FAC": Object {
+    "TomeApiGatewayEndpointDAC61333": Object {
       "Value": Object {
         "Fn::Join": Array [
           "",
           Array [
             "https://",
             Object {
-              "Ref": "helloWorldLambdaRestApi6825FB98",
+              "Ref": "TomeApiGateway3238DF2A",
             },
             ".execute-api.",
             Object {
@@ -28,29 +22,391 @@ Object {
             },
             "/",
             Object {
-              "Ref": "helloWorldLambdaRestApiDeploymentStageprod67DD79AF",
+              "Ref": "TomeApiGatewayDeploymentStageprod0732493A",
             },
             "/",
           ],
         ],
       },
     },
+    "UserPoolIdOutput": Object {
+      "Description": "UserPool ID",
+      "Value": Object {
+        "Ref": "TomeUserPool39BBD8AA",
+      },
+    },
   },
   "Parameters": Object {
-    "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900ArtifactHash27011E67": Object {
-      "Description": "Artifact hash for asset \\"0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900\\"",
+    "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375ArtifactHash3E7B8986": Object {
+      "Description": "Artifact hash for asset \\"47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375\\"",
       "Type": "String",
     },
-    "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900S3BucketF6815B4C": Object {
-      "Description": "S3 bucket for asset \\"0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900\\"",
+    "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3Bucket7B23A12D": Object {
+      "Description": "S3 bucket for asset \\"47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375\\"",
       "Type": "String",
     },
-    "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900S3VersionKey19B7C235": Object {
-      "Description": "S3 key for asset version \\"0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900\\"",
+    "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E": Object {
+      "Description": "S3 key for asset version \\"47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375\\"",
       "Type": "String",
     },
   },
   "Resources": Object {
+    "CognitoDefaultAuthenticatedRoleC5D5C31E": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": Object {
+                "ForAnyValue:StringLike": Object {
+                  "cognito-identity.amazonaws.com:amr": "authenticated",
+                },
+                "StringEquals": Object {
+                  "cognito-identity.amazonaws.com:aud": Object {
+                    "Ref": "TomeIdentityPool",
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Federated": "cognito-identity.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CognitoDefaultAuthenticatedRoleDefaultPolicy4C5EB799": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "mobileanalytics:PutEvents",
+                "cognito-sync:*",
+                "cognito-identity:*",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CognitoDefaultAuthenticatedRoleDefaultPolicy4C5EB799",
+        "Roles": Array [
+          Object {
+            "Ref": "CognitoDefaultAuthenticatedRoleC5D5C31E",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "CognitoDefaultUnauthenticatedRoleABBF7267": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRoleWithWebIdentity",
+              "Condition": Object {
+                "ForAnyValue:StringLike": Object {
+                  "cognito-identity.amazonaws.com:amr": "unauthenticated",
+                },
+                "StringEquals": Object {
+                  "cognito-identity.amazonaws.com:aud": Object {
+                    "Ref": "TomeIdentityPool",
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": Object {
+                "Federated": "cognito-identity.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CognitoDefaultUnauthenticatedRoleDefaultPolicy2B700C08": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": Array [
+                "mobileanalytics:PutEvents",
+                "cognito-sync:*",
+              ],
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "CognitoDefaultUnauthenticatedRoleDefaultPolicy2B700C08",
+        "Roles": Array [
+          Object {
+            "Ref": "CognitoDefaultUnauthenticatedRoleABBF7267",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "DefaultValid": Object {
+      "Properties": Object {
+        "IdentityPoolId": Object {
+          "Ref": "TomeIdentityPool",
+        },
+        "Roles": Object {
+          "authenticated": Object {
+            "Fn::GetAtt": Array [
+              "CognitoDefaultAuthenticatedRoleC5D5C31E",
+              "Arn",
+            ],
+          },
+          "unauthenticated": Object {
+            "Fn::GetAtt": Array [
+              "CognitoDefaultUnauthenticatedRoleABBF7267",
+              "Arn",
+            ],
+          },
+        },
+      },
+      "Type": "AWS::Cognito::IdentityPoolRoleAttachment",
+    },
+    "TomeApiGateway3238DF2A": Object {
+      "Properties": Object {
+        "Name": "Tome Rest API Gateway",
+      },
+      "Type": "AWS::ApiGateway::RestApi",
+    },
+    "TomeApiGatewayAccountFD9D0648": Object {
+      "DependsOn": Array [
+        "TomeApiGateway3238DF2A",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "TomeApiGatewayCloudWatchRole44EBC02F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "TomeApiGatewayCloudWatchRole44EBC02F": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "TomeApiGatewayDeploymentA3E78AE5637a4d39b8715d7798a9101e0fad406d": Object {
+      "DependsOn": Array [
+        "TomeApiGatewayHELLOGET0981CC78",
+        "TomeApiGatewayHELLO2D1CF1CD",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "TomeApiGateway3238DF2A",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "TomeApiGatewayDeploymentStageprod0732493A": Object {
+      "Properties": Object {
+        "DeploymentId": Object {
+          "Ref": "TomeApiGatewayDeploymentA3E78AE5637a4d39b8715d7798a9101e0fad406d",
+        },
+        "RestApiId": Object {
+          "Ref": "TomeApiGateway3238DF2A",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "TomeApiGatewayHELLO2D1CF1CD": Object {
+      "Properties": Object {
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "TomeApiGateway3238DF2A",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "HELLO",
+        "RestApiId": Object {
+          "Ref": "TomeApiGateway3238DF2A",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "TomeApiGatewayHELLOGET0981CC78": Object {
+      "Properties": Object {
+        "AuthorizationType": "COGNITO_USER_POOLS",
+        "AuthorizerId": Object {
+          "Ref": "cfnAuth",
+        },
+        "HttpMethod": "GET",
+        "Integration": Object {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "helloWorldFunction00C940B5",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": Object {
+          "Ref": "TomeApiGatewayHELLO2D1CF1CD",
+        },
+        "RestApiId": Object {
+          "Ref": "TomeApiGateway3238DF2A",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "TomeApiGatewayHELLOGETApiPermissionTestAuthStackTomeApiGatewayE1FEF752GETHELLOA5E43475": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldFunction00C940B5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "TomeApiGateway3238DF2A",
+              },
+              "/",
+              Object {
+                "Ref": "TomeApiGatewayDeploymentStageprod0732493A",
+              },
+              "/GET/HELLO",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "TomeApiGatewayHELLOGETApiPermissionTestTestAuthStackTomeApiGatewayE1FEF752GETHELLO78AF6BFF": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "helloWorldFunction00C940B5",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "TomeApiGateway3238DF2A",
+              },
+              "/test-invoke-stage/GET/HELLO",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "TomeIdentityPool": Object {
+      "Properties": Object {
+        "AllowUnauthenticatedIdentities": false,
+        "CognitoIdentityProviders": Array [
+          Object {
+            "ClientId": Object {
+              "Ref": "TomeUserPoolClient73667605",
+            },
+            "ProviderName": Object {
+              "Fn::GetAtt": Array [
+                "TomeUserPool39BBD8AA",
+                "ProviderName",
+              ],
+            },
+          },
+        ],
+      },
+      "Type": "AWS::Cognito::IdentityPool",
+    },
     "TomeUserPool39BBD8AA": Object {
       "Properties": Object {
         "AccountRecoverySetting": Object {
@@ -73,6 +429,29 @@ Object {
         ],
         "EmailVerificationMessage": "The verification code to your new account is {####}",
         "EmailVerificationSubject": "Verify your new account",
+        "LambdaConfig": Object {
+          "PostAuthentication": Object {
+            "Fn::GetAtt": Array [
+              "postAuthTriggerB1E2CEE1",
+              "Arn",
+            ],
+          },
+          "PreAuthentication": Object {
+            "Fn::GetAtt": Array [
+              "preAuthTrigger993ACD21",
+              "Arn",
+            ],
+          },
+        },
+        "Policies": Object {
+          "PasswordPolicy": Object {
+            "MinimumLength": 8,
+            "RequireLowercase": false,
+            "RequireNumbers": false,
+            "RequireSymbols": false,
+            "RequireUppercase": false,
+          },
+        },
         "SmsConfiguration": Object {
           "ExternalId": "TestAuthStackTomeUserPool1B88D190",
           "SnsCallerArn": Object {
@@ -112,11 +491,12 @@ Object {
         "CallbackURLs": Array [
           "https://example.com",
         ],
-        "ClientName": "testClient",
+        "ClientName": "Tome User Pool Client",
         "ExplicitAuthFlows": Array [
           "ALLOW_ADMIN_USER_PASSWORD_AUTH",
           "ALLOW_REFRESH_TOKEN_AUTH",
         ],
+        "GenerateSecret": false,
         "PreventUserExistenceErrors": "ENABLED",
         "SupportedIdentityProviders": Array [
           "COGNITO",
@@ -177,7 +557,7 @@ Object {
           },
         ],
         "RestApiId": Object {
-          "Ref": "helloWorldLambdaRestApi6825FB98",
+          "Ref": "TomeApiGateway3238DF2A",
         },
         "Type": "COGNITO_USER_POOLS",
       },
@@ -190,7 +570,7 @@ Object {
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900S3BucketF6815B4C",
+            "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3Bucket7B23A12D",
           },
           "S3Key": Object {
             "Fn::Join": Array [
@@ -203,7 +583,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900S3VersionKey19B7C235",
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
                         },
                       ],
                     },
@@ -216,7 +596,7 @@ Object {
                       "Fn::Split": Array [
                         "||",
                         Object {
-                          "Ref": "AssetParameters0ea07ae320b2c0472513620b4b5de100b23b0cdb4bb856cf502e4c9640ac1900S3VersionKey19B7C235",
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
                         },
                       ],
                     },
@@ -268,27 +648,74 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "helloWorldLambdaRestApi6825FB98": Object {
-      "Properties": Object {
-        "Name": "Hello World API",
-      },
-      "Type": "AWS::ApiGateway::RestApi",
-    },
-    "helloWorldLambdaRestApiAccount3D66EADA": Object {
+    "postAuthTriggerB1E2CEE1": Object {
       "DependsOn": Array [
-        "helloWorldLambdaRestApi6825FB98",
+        "postAuthTriggerServiceRoleF86355CB",
       ],
       "Properties": Object {
-        "CloudWatchRoleArn": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3Bucket7B23A12D",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+        "Handler": "postAuthTrigger.handler",
+        "Role": Object {
           "Fn::GetAtt": Array [
-            "helloWorldLambdaRestApiCloudWatchRole22367FBD",
+            "postAuthTriggerServiceRoleF86355CB",
             "Arn",
           ],
         },
+        "Runtime": "nodejs12.x",
       },
-      "Type": "AWS::ApiGateway::Account",
+      "Type": "AWS::Lambda::Function",
     },
-    "helloWorldLambdaRestApiCloudWatchRole22367FBD": Object {
+    "postAuthTriggerPostAuthenticationCognito5540FB79": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "postAuthTriggerB1E2CEE1",
+            "Arn",
+          ],
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "postAuthTriggerServiceRoleF86355CB": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
           "Statement": Array [
@@ -296,7 +723,7 @@ Object {
               "Action": "sts:AssumeRole",
               "Effect": "Allow",
               "Principal": Object {
-                "Service": "apigateway.amazonaws.com",
+                "Service": "lambda.amazonaws.com",
               },
             },
           ],
@@ -311,7 +738,7 @@ Object {
                 Object {
                   "Ref": "AWS::Partition",
                 },
-                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
           },
@@ -319,57 +746,89 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "helloWorldLambdaRestApiDeploymentCB1FF574ae10c162afd462d14276188f96f29d56": Object {
+    "preAuthTrigger993ACD21": Object {
       "DependsOn": Array [
-        "helloWorldLambdaRestApiHELLOGET6E88F46C",
-        "helloWorldLambdaRestApiHELLOAD091B67",
+        "preAuthTriggerServiceRoleAC6EFF16",
       ],
       "Properties": Object {
-        "Description": "Automatically created by the RestApi construct",
-        "RestApiId": Object {
-          "Ref": "helloWorldLambdaRestApi6825FB98",
+        "Code": Object {
+          "S3Bucket": Object {
+            "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3Bucket7B23A12D",
+          },
+          "S3Key": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                Object {
+                  "Fn::Select": Array [
+                    0,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                Object {
+                  "Fn::Select": Array [
+                    1,
+                    Object {
+                      "Fn::Split": Array [
+                        "||",
+                        Object {
+                          "Ref": "AssetParameters47adb2d5dd4b96d4a8e643974c01323c8447169eec545d852980f319d641f375S3VersionKey53A7D00E",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
         },
-      },
-      "Type": "AWS::ApiGateway::Deployment",
-    },
-    "helloWorldLambdaRestApiDeploymentStageprod67DD79AF": Object {
-      "Properties": Object {
-        "DeploymentId": Object {
-          "Ref": "helloWorldLambdaRestApiDeploymentCB1FF574ae10c162afd462d14276188f96f29d56",
-        },
-        "RestApiId": Object {
-          "Ref": "helloWorldLambdaRestApi6825FB98",
-        },
-        "StageName": "prod",
-      },
-      "Type": "AWS::ApiGateway::Stage",
-    },
-    "helloWorldLambdaRestApiHELLOAD091B67": Object {
-      "Properties": Object {
-        "ParentId": Object {
+        "Handler": "preAuthTrigger.handler",
+        "Role": Object {
           "Fn::GetAtt": Array [
-            "helloWorldLambdaRestApi6825FB98",
-            "RootResourceId",
+            "preAuthTriggerServiceRoleAC6EFF16",
+            "Arn",
           ],
         },
-        "PathPart": "HELLO",
-        "RestApiId": Object {
-          "Ref": "helloWorldLambdaRestApi6825FB98",
-        },
+        "Runtime": "nodejs12.x",
       },
-      "Type": "AWS::ApiGateway::Resource",
+      "Type": "AWS::Lambda::Function",
     },
-    "helloWorldLambdaRestApiHELLOGET6E88F46C": Object {
+    "preAuthTriggerPreAuthenticationCognitoB3CA1373": Object {
       "Properties": Object {
-        "AuthorizationType": "COGNITO_USER_POOLS",
-        "AuthorizerId": Object {
-          "Ref": "cfnAuth",
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "preAuthTrigger993ACD21",
+            "Arn",
+          ],
         },
-        "HttpMethod": "GET",
-        "Integration": Object {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": Object {
+        "Principal": "cognito-idp.amazonaws.com",
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "preAuthTriggerServiceRoleAC6EFF16": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
             "Fn::Join": Array [
               "",
               Array [
@@ -377,108 +836,13 @@ Object {
                 Object {
                   "Ref": "AWS::Partition",
                 },
-                ":apigateway:",
-                Object {
-                  "Ref": "AWS::Region",
-                },
-                ":lambda:path/2015-03-31/functions/",
-                Object {
-                  "Fn::GetAtt": Array [
-                    "helloWorldFunction00C940B5",
-                    "Arn",
-                  ],
-                },
-                "/invocations",
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
               ],
             ],
           },
-        },
-        "ResourceId": Object {
-          "Ref": "helloWorldLambdaRestApiHELLOAD091B67",
-        },
-        "RestApiId": Object {
-          "Ref": "helloWorldLambdaRestApi6825FB98",
-        },
+        ],
       },
-      "Type": "AWS::ApiGateway::Method",
-    },
-    "helloWorldLambdaRestApiHELLOGETApiPermissionTestAuthStackhelloWorldLambdaRestApiDD8D8853GETHELLOEDFC2CE9": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "helloWorldFunction00C940B5",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "arn:",
-              Object {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              Object {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              Object {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              Object {
-                "Ref": "helloWorldLambdaRestApi6825FB98",
-              },
-              "/",
-              Object {
-                "Ref": "helloWorldLambdaRestApiDeploymentStageprod67DD79AF",
-              },
-              "/GET/HELLO",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "helloWorldLambdaRestApiHELLOGETApiPermissionTestTestAuthStackhelloWorldLambdaRestApiDD8D8853GETHELLO6A5EDC0F": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "helloWorldFunction00C940B5",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "arn:",
-              Object {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              Object {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              Object {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              Object {
-                "Ref": "helloWorldLambdaRestApi6825FB98",
-              },
-              "/test-invoke-stage/GET/HELLO",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
+      "Type": "AWS::IAM::Role",
     },
   },
 }
