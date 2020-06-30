@@ -4,19 +4,40 @@ import { App, Stack, CfnOutput } from '@aws-cdk/core';
 import { UserPool, UserPoolClient } from '@aws-cdk/aws-cognito'
 
 export class AuthStack extends Stack {
+  apiGateway: LambdaRestApi;
+  authorizer: CfnAuthorizer;
+  userPool: UserPool;
+  userPoolClient: UserPoolClient;
+
   constructor(app: App, id: string) {
     super(app, id);
 
+    const preAuthTrigger = new Function(this, 'preAuthTrigger', {
+      code: new AssetCode('lambdas'),
+      handler: 'preAuthTrigger.handler',
+      runtime: Runtime.NODEJS_12_X,
+    });
+
+    const postAuthTrigger = new Function(this, 'postAuthTrigger', {
+      code: new AssetCode('lambdas'),
+      handler: 'postAuthTrigger.handler',
+      runtime: Runtime.NODEJS_12_X,
+    });
+
     // Cognito User Pool with Email Sign-in Type.
-    const userPool = new UserPool(this, 'TomeUserPool', {
+     this.userPool = new UserPool(this, 'TomeUserPool', {
       signInAliases: {
         email: true
-      }
+       },
+       lambdaTriggers: {
+        preAuthentication: preAuthTrigger,
+        postAuthentication: postAuthTrigger
+       }
     })
 
-    const userPoolClient = new UserPoolClient(this, 'TomeUserPoolClient', {
+     this.userPoolClient = new UserPoolClient(this, 'TomeUserPoolClient', {
       userPoolClientName: 'testClient',
-      userPool: userPool,
+      userPool: this.userPool,
       authFlows: {
         adminUserPassword: true,
         refreshToken: true,
@@ -34,38 +55,38 @@ export class AuthStack extends Stack {
 
     // Rest API backed by the helloWorldFunction
     // Defines an API Gateway REST API with AWS Lambda proxy integration
-    const helloWorldLambdaRestApi = new LambdaRestApi(this, 'helloWorldLambdaRestApi', {
-      restApiName: 'Hello World API',
-      handler: helloWorldFunction,
+    this.apiGateway = new LambdaRestApi(this, 'TomeApiGateway', {
+      restApiName: 'Tome Rest API Gateway',
+      handler: helloWorldFunction, // NOTE: handler is the default Lambda function that handles all requests from this API unless something else is defined by addMethod()
       proxy: false,
     });
 
     // Authorizer for the Hello World API that uses the
     // Cognito User pool to Authorize users.
     // AWS::ApiGateway::Authorizer
-    const authorizer = new CfnAuthorizer(this, 'cfnAuth', {
-      restApiId: helloWorldLambdaRestApi.restApiId,
+    this.authorizer = new CfnAuthorizer(this, 'cfnAuth', {
+      restApiId: this.apiGateway.restApiId,
       name: 'HelloWorldAPIAuthorizer',
       type: 'COGNITO_USER_POOLS',
       identitySource: 'method.request.header.Authorization',
-      providerArns: [userPool.userPoolArn],
+      providerArns: [this.userPool.userPoolArn],
     })
 
     // Hello Resource API for the REST API. 
-    const hello = helloWorldLambdaRestApi.root.addResource('HELLO');
+    const hello = this.apiGateway.root.addResource('HELLO');
 
     // GET method for the HELLO API resource. It uses Cognito for
     // authorization and the auathorizer defined above.
     hello.addMethod('GET', new LambdaIntegration(helloWorldFunction), {
       authorizationType: AuthorizationType.COGNITO,
       authorizer: {
-        authorizerId: authorizer.ref
+        authorizerId: this.authorizer.ref
       }
     })
 
     new CfnOutput(this, "UserPoolIdOutput", {
       description: "UserPool ID",
-      value: userPool.userPoolId
+      value: this.userPool.userPoolId
     });
     
   }
