@@ -1,7 +1,9 @@
 import * as cdk from '@aws-cdk/core';
 import { UserPool, UserPoolClient } from '@aws-cdk/aws-cognito';
-export class TomeStack extends cdk.Stack {
+
+export default class TomeStack extends cdk.Stack {
   userPool: UserPool;
+
   userPoolClient: UserPoolClient;
 
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -25,22 +27,22 @@ export class TomeStack extends cdk.Stack {
         requireLowercase: true,
         requireDigits: true,
         requireUppercase: true,
-        requireSymbols: true
+        requireSymbols: true,
       },
       standardAttributes: {
         givenName: {
           mutable: true,
-          required: true
+          required: true,
         },
         familyName: {
           mutable: true,
-          required: true
+          required: true,
         },
         email: {
           mutable: true,
-          required: true
-        }
-      }
+          required: true,
+        },
+      },
     });
 
     this.userPoolClient = new UserPoolClient(this, 'TomeTestUserPoolClient', {
@@ -50,12 +52,11 @@ export class TomeStack extends cdk.Stack {
         adminUserPassword: true,
         refreshToken: true,
       },
-      preventUserExistenceErrors: true
+      preventUserExistenceErrors: true,
     });
-    
+
     // Lambda
     // DynamoDB Table
-    
 
     // User Data: Profile, Library, Group Meta, Queue, Tome
     // API Gateway

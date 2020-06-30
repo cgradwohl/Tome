@@ -1,0 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.handler = async (event = {}) => {
+    // Return to Amazon Cognito
+    return { statusCode: 201, body: ' [ PRE AUTH TRIGGER ] ' + event };
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJlQXV0aFRyaWdnZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJwcmVBdXRoVHJpZ2dlci50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFhLFFBQUEsT0FBTyxHQUFHLEtBQUssRUFBRSxRQUFhLEVBQUUsRUFBZ0IsRUFBRTtJQUM3RCwyQkFBMkI7SUFDM0IsT0FBTyxFQUFFLFVBQVUsRUFBRSxHQUFHLEVBQUUsSUFBSSxFQUFFLHdCQUF3QixHQUFHLEtBQUssRUFBQyxDQUFDO0FBQ3BFLENBQUMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBjb25zdCBoYW5kbGVyID0gYXN5bmMgKGV2ZW50OiBhbnkgPSB7fSk6IFByb21pc2U8YW55PiA9PiB7XG4gIC8vIFJldHVybiB0byBBbWF6b24gQ29nbml0b1xuICByZXR1cm4geyBzdGF0dXNDb2RlOiAyMDEsIGJvZHk6ICcgWyBQUkUgQVVUSCBUUklHR0VSIF0gJyArIGV2ZW50fTtcbn07XG4iXX0=

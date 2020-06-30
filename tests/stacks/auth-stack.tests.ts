@@ -2,7 +2,7 @@ import { SynthUtils } from '@aws-cdk/assert';
 import '@aws-cdk/assert/jest';
 import { App, Fn } from '@aws-cdk/core';
 
-import { AuthStack } from '../../lib/auth-stack';
+import AuthStack from '../../lib/auth-stack';
 
 const app = new App();
 const authStack = new AuthStack(app, 'TestAuthStack');
@@ -12,10 +12,10 @@ describe('auth-stack', () => {
     expect(SynthUtils.toCloudFormation(authStack)).toMatchSnapshot();
   });
 
-  it('should deploy a user pool', () => { 
+  it('should deploy a user pool', () => {
     expect(authStack).toHaveResource('AWS::Cognito::UserPool', {
       AutoVerifiedAttributes: [
-        "email"
+        'email',
       ],
       AdminCreateUserConfig: {
         AllowAdminCreateUserOnly: true,
@@ -23,17 +23,17 @@ describe('auth-stack', () => {
       AccountRecoverySetting: {
         RecoveryMechanisms: [
           {
-            Name: "verified_phone_number",
+            Name: 'verified_phone_number',
             Priority: 1,
           },
           {
-            Name: "verified_email",
+            Name: 'verified_email',
             Priority: 2,
           },
         ],
       },
     });
-  })
+  });
 
-  it('should deploy a user pool client', () => { expect('todo').toEqual('todo') })
+  it('should deploy a user pool client', () => { expect('todo').toEqual('todo'); });
 });
