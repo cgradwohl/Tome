@@ -45,6 +45,7 @@ export default class TomeStack extends cdk.Stack {
       },
     });
 
+    // web client
     this.userPoolClient = new UserPoolClient(this, 'TomeTestUserPoolClient', {
       userPoolClientName: 'testClient',
       userPool: this.userPool,
